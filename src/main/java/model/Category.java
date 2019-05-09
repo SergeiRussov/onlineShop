@@ -1,4 +1,4 @@
-package entity;
+package model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +23,22 @@ public class Category {
     public Category(Category other) {
         this.name = other.name;
         this.goods = new ArrayList<>(other.goods);
+    }
+
+    @Override
+    public String toString() {
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Good good : goods) {
+
+            sb.append(good.toString() + "\n");
+        }
+
+        return "Category{" +
+                "id=" + id +
+                ", name='" + name +
+                ", goods:\n" + sb +
+                '}';
     }
 }
