@@ -1,9 +1,8 @@
-package jdbc.impl;
+package jdbc.repository.impl;
 
-import jdbc.CategoryRepository;
+import jdbc.repository.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import model.Category;
-import model.Good;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,14 +25,15 @@ public class CategoryRepositoryImpl implements CategoryRepository<Category> {
         final List<Category> result = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(SQLCategory.GET_CATEGORIES.QUERY)) {
-            final ResultSet resultSet = statement.executeQuery();
-            int id = 0;
-            while (resultSet.next()) {
-                id++;
+            final ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
                 final Category category = new Category();
-                category.setId(Integer.parseInt(resultSet.getString("id")));
-                category.setName(resultSet.getString("name"));
-                category.setGoods(new GoodRepositoryImpl(connection).getGoodsFromCategory(id));
+                int categoryId = rs.getInt("id");
+                category.setId(categoryId);
+                category.setName(rs.getString("name"));
+                category.setGoods(new GoodRepositoryImpl(connection).getGoodsFromCategory(categoryId));
+
                 result.add(category);
             }
         } catch (SQLException e) {

@@ -1,7 +1,7 @@
 package views.impl;
 
 import jdbc.JDBCUtils;
-import jdbc.impl.GoodRepositoryImpl;
+import jdbc.repository.impl.GoodRepositoryImpl;
 import lombok.Data;
 import model.Good;
 import views.Executable;

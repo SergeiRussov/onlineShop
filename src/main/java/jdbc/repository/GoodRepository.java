@@ -1,4 +1,4 @@
-package jdbc;
+package jdbc.repository;
 
 import model.Good;
 

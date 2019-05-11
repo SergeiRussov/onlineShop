@@ -1,17 +1,26 @@
 package views;
 
+import dao.impl.CustomerDAO;
+import jdbc.JDBCUtils;
 import lombok.extern.slf4j.Slf4j;
+import model.Customer;
 import views.impl.CatalogMenuItem;
 import views.impl.CloseShop;
+import views.impl.OrderHistoryView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 public class Menu {
+
+    private Customer customer;
+    private Connection connection;
+    private JDBCUtils driver = new JDBCUtils();
 
     private Map<Integer, Executable> menuItems = new HashMap<>();
 
@@ -22,10 +31,15 @@ public class Menu {
 
     private void showMenu() {
         System.out.println("1. Каталог");
+        System.out.println("2. История покупок");
+        System.out.println("3. Корзина");
         System.out.println("0. Выход");
     }
 
     public void getCommand() {
+        customerLogin();
+        menuItems.put(2, new OrderHistoryView(customer));
+
         showMenu();
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
@@ -41,5 +55,19 @@ public class Menu {
         }
     }
 
+    private Customer customerLogin() {
+        System.out.println("Введите полное имя пользователя: ");
+        connection = driver.createConnection();
 
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            String customerName = reader.readLine();
+            customer = new CustomerDAO(connection).read(customerName);
+            System.out.println("Успешный вход\n");
+        } catch (IOException e) {
+            System.out.println("Пользователь не найден");
+            log.error(e.getMessage());
+        }
+
+        return customer;
+    }
 }

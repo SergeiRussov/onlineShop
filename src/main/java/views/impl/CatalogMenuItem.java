@@ -1,7 +1,7 @@
 package views.impl;
 
 import jdbc.JDBCUtils;
-import jdbc.impl.CategoryRepositoryImpl;
+import jdbc.repository.impl.CategoryRepositoryImpl;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import model.Category;
