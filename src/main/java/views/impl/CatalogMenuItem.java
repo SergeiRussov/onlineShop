@@ -9,7 +9,6 @@ import views.Executable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
@@ -23,10 +22,24 @@ public class CatalogMenuItem implements Executable {
     private Connection connection;
     private List<Category> list;
     private Map<Integer, Executable> categoryMenuItems = new HashMap<>();
+    private BufferedReader reader;
+
+    public CatalogMenuItem(BufferedReader reader) {
+        this.reader = reader;
+    }
 
     @Override
     public void run() {
         connection = driver.createConnection();
+
+        fillCategoryMenuItem();
+
+        driver.closeConnection(connection);
+
+        selectCategory(reader);
+    }
+
+    private void fillCategoryMenuItem() {
         list = new CategoryRepositoryImpl(connection).getCategories();
 
         for (Category category : list) {
@@ -35,10 +48,10 @@ public class CatalogMenuItem implements Executable {
             categoryMenuItem.setId(category.getId());
             categoryMenuItems.put(category.getId(), categoryMenuItem);
         }
+    }
 
-        driver.closeConnection(connection);
-
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+    private void selectCategory(BufferedReader reader) {
+        try {
             System.out.print("\nВведите номер раздела: ");
             int id = Integer.parseInt(reader.readLine());
             if (categoryMenuItems.containsKey(id)) {

@@ -26,7 +26,6 @@ public class Menu {
 
     {
         menuItems.put(0, new CloseShop());
-        menuItems.put(1, new CatalogMenuItem());
     }
 
     private void showMenu() {
@@ -37,12 +36,13 @@ public class Menu {
     }
 
     public void getCommand() {
-        customerLogin();
-        menuItems.put(2, new OrderHistoryView(customer));
-
-        showMenu();
-
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            customerLogin(reader);
+            menuItems.put(2, new OrderHistoryView(customer));
+            menuItems.put(1, new CatalogMenuItem(reader));
+
+            showMenu();
+
             while (CloseShop.isIsWork()) {
                 System.out.print("\nВведите номер команды: ");
                 int itemNumber = Integer.parseInt(reader.readLine());
@@ -55,11 +55,11 @@ public class Menu {
         }
     }
 
-    private Customer customerLogin() {
+    private Customer customerLogin(BufferedReader reader) {
         System.out.println("Введите полное имя пользователя: ");
         connection = driver.createConnection();
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
             String customerName = reader.readLine();
             customer = new CustomerDAO(connection).read(customerName);
             System.out.println("Успешный вход\n");
