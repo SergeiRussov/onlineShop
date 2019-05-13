@@ -1,22 +1,16 @@
 package views.impl;
 
-import model.Customer;
 import model.Order;
 import views.Executable;
+import views.Menu;
 
 import java.util.List;
 
 public class OrderHistoryView implements Executable {
 
-    private Customer customer;
-
-    public OrderHistoryView(Customer customer) {
-        this.customer = customer;
-    }
-
     @Override
     public void run() {
-        List<Order> orders = customer.getOrders();
+        List<Order> orders = Menu.getCustomer().getOrders();
 
         for (Order order : orders) {
             System.out.println("ID заказа: " + order.getId() + ", дата заказа: " + order.getDate() +

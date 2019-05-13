@@ -7,4 +7,5 @@ import java.util.List;
 public interface OrderRepository<Entity extends Order> {
 
     List<Entity> getOrdersFromCustomerId(int customerId);
+    boolean addOrder(Entity entity);
 }

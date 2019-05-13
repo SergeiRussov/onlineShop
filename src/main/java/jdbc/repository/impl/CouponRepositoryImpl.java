@@ -41,6 +41,23 @@ public class CouponRepositoryImpl implements CouponRepository<Coupon> {
         return coupons;
     }
 
+    @Override
+    public boolean addCoupon(int discount) {
+        boolean result = false;
+
+        try (PreparedStatement statement = connection.prepareStatement(SQLCoupon.ADD_COUPON.QUERY)) {
+            statement.setInt(1, discount);
+
+            statement.executeUpdate();
+
+            result = true;
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+        }
+
+        return result;
+    }
+
     public Coupon getCouponFromId(int id) {
         Coupon coupon = new Coupon();
         coupon.setId(0);
@@ -57,7 +74,8 @@ public class CouponRepositoryImpl implements CouponRepository<Coupon> {
 
     enum SQLCoupon {
 
-        GET_COUPONS("");
+        GET_COUPONS("SELECT * FROM coupons"),
+        ADD_COUPON("INSERT INTO coupons (discount) VALUES (?)");
 
         String QUERY;
 

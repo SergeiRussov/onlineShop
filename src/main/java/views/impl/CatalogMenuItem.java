@@ -44,7 +44,7 @@ public class CatalogMenuItem implements Executable {
 
         for (Category category : list) {
             System.out.println(category.getId() + ". " + category.getName());
-            CategoryMenuItem categoryMenuItem = new CategoryMenuItem();
+            CategoryMenuItem categoryMenuItem = new CategoryMenuItem(reader);
             categoryMenuItem.setId(category.getId());
             categoryMenuItems.put(category.getId(), categoryMenuItem);
         }

@@ -1,0 +1,567 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.2
+-- Dumped by pg_dump version 11.2
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.categories_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.categories_id_seq OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: categories; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.categories (
+    id integer DEFAULT nextval('public.categories_id_seq'::regclass) NOT NULL,
+    name character varying
+);
+
+
+ALTER TABLE public.categories OWNER TO postgres;
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.contacts_id_seq OWNER TO postgres;
+
+--
+-- Name: contacts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.contacts (
+    id integer DEFAULT nextval('public.contacts_id_seq'::regclass) NOT NULL,
+    address character varying,
+    phone numeric,
+    email character varying
+);
+
+
+ALTER TABLE public.contacts OWNER TO postgres;
+
+--
+-- Name: coupons_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.coupons_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.coupons_id_seq OWNER TO postgres;
+
+--
+-- Name: coupons; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.coupons (
+    id integer DEFAULT nextval('public.coupons_id_seq'::regclass) NOT NULL,
+    discount integer NOT NULL
+);
+
+
+ALTER TABLE public.coupons OWNER TO postgres;
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.customers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.customers_id_seq OWNER TO postgres;
+
+--
+-- Name: customers; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.customers (
+    id integer DEFAULT nextval('public.customers_id_seq'::regclass) NOT NULL,
+    name character varying,
+    contact_id integer,
+    role_id integer
+);
+
+
+ALTER TABLE public.customers OWNER TO postgres;
+
+--
+-- Name: customers_orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.customers_orders (
+    customer_id integer,
+    order_id integer
+);
+
+
+ALTER TABLE public.customers_orders OWNER TO postgres;
+
+--
+-- Name: goods_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.goods_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.goods_id_seq OWNER TO postgres;
+
+--
+-- Name: goods; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.goods (
+    id integer DEFAULT nextval('public.goods_id_seq'::regclass) NOT NULL,
+    name character varying,
+    price integer,
+    category_id integer NOT NULL
+);
+
+
+ALTER TABLE public.goods OWNER TO postgres;
+
+--
+-- Name: goods_orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.goods_orders (
+    order_id integer,
+    good_id integer
+);
+
+
+ALTER TABLE public.goods_orders OWNER TO postgres;
+
+--
+-- Name: order_status; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.order_status (
+    id integer NOT NULL,
+    name character varying
+);
+
+
+ALTER TABLE public.order_status OWNER TO postgres;
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.orders_id_seq OWNER TO postgres;
+
+--
+-- Name: orders; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.orders (
+    id integer DEFAULT nextval('public.orders_id_seq'::regclass) NOT NULL,
+    order_date date,
+    total_price integer,
+    status_id integer,
+    coupon_id integer
+);
+
+
+ALTER TABLE public.orders OWNER TO postgres;
+
+--
+-- Name: roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.roles (
+    id integer NOT NULL,
+    name character varying NOT NULL
+);
+
+
+ALTER TABLE public.roles OWNER TO postgres;
+
+--
+-- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.categories (id, name) FROM stdin;
+1	computer hardware
+2	computer peripherals
+\.
+
+
+--
+-- Data for Name: contacts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.contacts (id, address, phone, email) FROM stdin;
+1	Moscow, Babayevskaya street, 2	89012547863	firstId@mail.ru
+2	Tolyatti, Zhukova street, 2g	82546931753	secondId@bk.ru
+3	Samara, Amineva street, 1	89312569876	thirdId@bk.ru
+4	Moscow, Zubovskaya street, 5	89036547893	fourthId@bk.ru
+5	Tolyatti, Frunze street, 3	85463214589	fifthId@mail.ru
+\.
+
+
+--
+-- Data for Name: coupons; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.coupons (id, discount) FROM stdin;
+1	20
+2	30
+3	40
+5	25
+6	25
+404	0
+7	100
+\.
+
+
+--
+-- Data for Name: customers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.customers (id, name, contact_id, role_id) FROM stdin;
+1	Petrov Petya	1	1
+2	Sidorov Sidor	2	2
+3	Ivanov Ivan	3	3
+4	Kulikova Masha	4	3
+5	Udina Liza	5	3
+\.
+
+
+--
+-- Data for Name: customers_orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.customers_orders (customer_id, order_id) FROM stdin;
+1	1
+2	2
+3	3
+4	4
+5	5
+2	11
+\.
+
+
+--
+-- Data for Name: goods; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.goods (id, name, price, category_id) FROM stdin;
+1	motherboard	5000	1
+2	cpu	14000	1
+3	ram	6000	1
+4	gpu	17000	1
+5	power supply	7500	1
+6	computer monitor	10000	2
+7	keyboard	3000	2
+8	computer mouse	2000	2
+9	headset	3500	2
+10	acoustic system	7000	2
+14	intel core i7 8700k	25000	1
+15	amd ryzen 2600	11000	1
+16	amd ryzen 2700x	18000	2
+\.
+
+
+--
+-- Data for Name: goods_orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.goods_orders (order_id, good_id) FROM stdin;
+1	1
+1	2
+1	3
+2	4
+2	5
+3	10
+4	9
+4	8
+4	7
+5	1
+5	2
+5	3
+5	4
+5	5
+10	6
+11	6
+\.
+
+
+--
+-- Data for Name: order_status; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.order_status (id, name) FROM stdin;
+1	order processing
+2	is delivered
+3	order delivered
+\.
+
+
+--
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.orders (id, order_date, total_price, status_id, coupon_id) FROM stdin;
+1	2019-08-21	25000	1	\N
+2	2019-07-22	24500	2	1
+3	2019-05-05	7000	3	3
+4	2019-01-30	8500	2	2
+5	2019-06-27	49500	1	\N
+6	2019-05-13	14000	1	404
+7	2019-05-13	19000	1	404
+8	2019-05-13	5000	1	404
+9	2019-05-13	4000	1	1
+10	2019-05-13	10000	1	404
+11	2019-05-13	10000	1	404
+\.
+
+
+--
+-- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.roles (id, name) FROM stdin;
+1	adimn
+2	moderator
+3	user
+\.
+
+
+--
+-- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.categories_id_seq', 3, false);
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.contacts_id_seq', 6, false);
+
+
+--
+-- Name: coupons_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.coupons_id_seq', 7, true);
+
+
+--
+-- Name: customers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.customers_id_seq', 6, false);
+
+
+--
+-- Name: goods_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.goods_id_seq', 16, true);
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.orders_id_seq', 11, true);
+
+
+--
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.contacts
+    ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: coupons coupons_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.coupons
+    ADD CONSTRAINT coupons_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customers customers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT customers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: goods goods_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.goods
+    ADD CONSTRAINT goods_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: order_status order_status_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.order_status
+    ADD CONSTRAINT order_status_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.roles
+    ADD CONSTRAINT roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: customers customers_contact_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT customers_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
+
+
+--
+-- Name: customers_orders customers_orders_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customers_orders
+    ADD CONSTRAINT customers_orders_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.customers(id);
+
+
+--
+-- Name: customers_orders customers_orders_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customers_orders
+    ADD CONSTRAINT customers_orders_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id);
+
+
+--
+-- Name: customers customers_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.customers
+    ADD CONSTRAINT customers_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.roles(id);
+
+
+--
+-- Name: goods goods_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.goods
+    ADD CONSTRAINT goods_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id);
+
+
+--
+-- Name: goods_orders goods_orders_good_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.goods_orders
+    ADD CONSTRAINT goods_orders_good_id_fkey FOREIGN KEY (good_id) REFERENCES public.goods(id);
+
+
+--
+-- Name: goods_orders goods_orders_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.goods_orders
+    ADD CONSTRAINT goods_orders_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(id);
+
+
+--
+-- Name: orders orders_coupon_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_coupon_id_fkey FOREIGN KEY (coupon_id) REFERENCES public.coupons(id);
+
+
+--
+-- Name: orders orders_status_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_status_id_fkey FOREIGN KEY (status_id) REFERENCES public.order_status(id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
