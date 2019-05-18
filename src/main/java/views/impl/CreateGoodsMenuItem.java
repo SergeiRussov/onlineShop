@@ -1,8 +1,8 @@
 package views.impl;
 
 import jdbc.JDBCUtils;
-import jdbc.repository.impl.GoodRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
+import service.impl.GoodServiceImpl;
 import views.Executable;
 
 import java.io.BufferedReader;
@@ -37,7 +37,7 @@ public class CreateGoodsMenuItem implements Executable {
             System.out.print("\nВведите путь до файла: ");
             String path = reader.readLine();
 
-            new GoodRepositoryImpl(connection).addGoods(new File(path));
+            new GoodServiceImpl(connection).addGoods(new File(path));
 
             flag = true;
         } catch (IOException e) {

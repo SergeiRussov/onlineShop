@@ -2,11 +2,11 @@ package views.impl;
 
 import jdbc.JDBCUtils;
 import jdbc.repository.impl.CouponRepositoryImpl;
-import jdbc.repository.impl.OrderRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import model.Coupon;
 import model.Good;
 import model.Order;
+import service.impl.OrderServiceImpl;
 import views.Executable;
 
 import java.io.BufferedReader;
@@ -18,6 +18,7 @@ public class OrderItem implements Executable {
 
     private Order order;
     private BufferedReader reader;
+    private JDBCUtils driver = new JDBCUtils();
 
     public OrderItem(BufferedReader reader) {
         this.reader = reader;
@@ -64,13 +65,12 @@ public class OrderItem implements Executable {
     private void validePurchase(BufferedReader reader) {
         System.out.println("Провести заказ?\n1. Да\n2. Нет");
         try {
-
             int answer = Integer.parseInt(reader.readLine());
             if (answer == 1) {
                 addCoupon(reader);
-                Connection connection = new JDBCUtils().createConnection();
-                new OrderRepositoryImpl(connection).addOrder(order);
-                new JDBCUtils().closeConnection(connection);
+                Connection connection = driver.createConnection();
+                new OrderServiceImpl(connection).addOrder(order);
+                driver.closeConnection(connection);
             }
         } catch (IOException e) {
             log.error(e.getMessage());
@@ -82,11 +82,11 @@ public class OrderItem implements Executable {
         try {
             int answer = Integer.parseInt(reader.readLine());
             if (answer == 1) {
-                Connection connection = new JDBCUtils().createConnection();
+                Connection connection = driver.createConnection();
                 System.out.println("Введите ID купона: ");
                 int id = Integer.parseInt(reader.readLine());
                 order.setCoupon(new CouponRepositoryImpl(connection).getCouponFromId(id));
-                new JDBCUtils().closeConnection(connection);
+                driver.closeConnection(connection);
 
                 int newTotalPrice = order.getTotalPrice() - (order.getTotalPrice() / 100 * order.getCoupon().getDiscount());
                 order.setTotalPrice(newTotalPrice);

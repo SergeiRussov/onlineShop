@@ -1,7 +1,7 @@
 package views;
 
-import dao.impl.CustomerDAO;
 import jdbc.JDBCUtils;
+import jdbc.repository.impl.CustomerRepositryImpl;
 import lombok.extern.slf4j.Slf4j;
 import model.Customer;
 import views.impl.*;
@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -19,6 +20,7 @@ public class Menu {
     private static Customer customer;
     private Connection connection;
     private JDBCUtils driver = new JDBCUtils();
+    private String customerName;
 
     private Map<Integer, Executable> menuItems = new HashMap<>();
 
@@ -42,6 +44,7 @@ public class Menu {
             menuItems.put(6, new CreateGoodsMenuItem(reader));
 
             while (CloseShop.isIsWork()) {
+                setCustomer(customerName);
                 menuItems.get(1).run();
                 System.out.print("\nВведите номер команды: ");
                 int itemNumber = Integer.parseInt(reader.readLine());
@@ -62,8 +65,9 @@ public class Menu {
         while (true) {
             try {
                 System.out.print("Введите полное имя пользователя: ");
-                String customerName = reader.readLine();
-                customer = new CustomerDAO(connection).read(customerName);
+                customerName = reader.readLine();
+
+                setCustomer(customerName);
 
                 if (customer.getId() == -1) {
                     throw new IOException();
@@ -78,5 +82,15 @@ public class Menu {
         }
 
         return customer;
+    }
+
+    private void setCustomer(String customerName) {
+        List<Customer> customers = new CustomerRepositryImpl(connection).getCustomers();
+
+        for (Customer temp : customers) {
+            if (temp.getName().equals(customerName)) {
+                customer = temp;
+            }
+        }
     }
 }

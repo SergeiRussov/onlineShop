@@ -3,6 +3,7 @@ package views.impl;
 import jdbc.JDBCUtils;
 import jdbc.repository.impl.CouponRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
+import service.impl.CouponServiceImpl;
 import views.Executable;
 
 import java.io.BufferedReader;
@@ -36,7 +37,7 @@ public class CouponMenuItem implements Executable {
 
         try {
             int discount = Integer.parseInt(reader.readLine());
-            new CouponRepositoryImpl(connection).addCoupon(discount);
+            new CouponServiceImpl(connection).addCoupon(discount);
 
             flag = true;
         } catch (IOException e) {
